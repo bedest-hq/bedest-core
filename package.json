@@ -1,6 +1,6 @@
 {
   "name": "bedest-core",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Core abstractions for the BED stack (Bun + Elysia + Drizzle)",
   "type": "module",
   "main": "./dist/index.js",
