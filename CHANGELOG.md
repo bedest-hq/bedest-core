@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/bedest-hq/bedest-core/compare/v1.0.0...v1.0.1) (2026-06-09)
+
+
+### Bug Fixes
+
+* publis is moved into the release please ([15c5a61](https://github.com/bedest-hq/bedest-core/commit/15c5a614c8e55adafbe3f8bc6226d3b3dc6d6fd4))
+
 ## 1.0.0 (2026-06-09)
 
 
