@@ -1,7 +1,12 @@
 
 # bedest-core
 
+[![NPM Version](https://img.shields.io/npm/v/bedest-core)](https://www.npmjs.com/package/bedest-core)
+[![NPM Downloads](https://img.shields.io/npm/dt/bedest-core)](https://www.npmjs.com/package/bedest-core)
+
 Core abstractions for the **Bedest** BED stack (**Bun + Elysia + Drizzle**).
+
+
 
 ## Installation
 
