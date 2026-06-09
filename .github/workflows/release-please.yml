@@ -28,7 +28,7 @@ jobs:
         with:
           bun-version: latest
 
-      - name: Setup Node.js (NPM yetkilendirmesi için)
+      - name: Setup Node.js
         if: ${{ steps.release.outputs.release_created }}
         uses: actions/setup-node@v4
         with:
