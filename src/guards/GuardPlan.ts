@@ -1,4 +1,4 @@
-import { IUserApp } from "../interfaces/IContextApp";
+import { ITenantUserApp } from "../interfaces/IContextApp";
 import { status } from "elysia";
 
 export type PlanChecker = (
@@ -7,7 +7,7 @@ export type PlanChecker = (
 ) => Promise<{ plan: string; planEnd: Date } | null | undefined>;
 
 export const MacroPlanGuard = (plans: string[], checkPlan: PlanChecker) => ({
-  async beforeHandle({ userRuntime }: { userRuntime?: IUserApp }) {
+  async beforeHandle({ userRuntime }: { userRuntime?: ITenantUserApp }) {
     if (!userRuntime) {
       throw status("Unauthorized");
     }

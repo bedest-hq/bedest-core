@@ -25,7 +25,7 @@ export abstract class ServiceBase<
   TInsertData = Prettify<
     Omit<
       InferInsertModel<TTable>,
-      "id" | "createdAt" | "isDeleted" | "deletedAt"
+      "id" | "createdAt" | "updatedAt" | "isDeleted" | "deletedAt"
     >
   >,
 > {
@@ -140,7 +140,9 @@ export abstract class ServiceBase<
       .set(data as PgUpdateSetSource<TTable>)
       .where(and(...this.getFilters(id)));
 
-    if (update.rowCount === 0) {
+    const count =
+      update.rowCount ?? (update as { affectedRows?: number }).affectedRows;
+    if (count === 0) {
       throw status("Not Found");
     }
 
@@ -153,10 +155,16 @@ export abstract class ServiceBase<
       deletedAt: c.nowDatetime,
     } as PgUpdateSetSource<TTable>;
 
-    await c.db
+    const update = await c.db
       .update(this.table)
       .set(payload)
       .where(and(...this.getFilters(id)));
+
+    const count =
+      update.rowCount ?? (update as { affectedRows?: number }).affectedRows;
+    if (count === 0) {
+      throw status("Not Found");
+    }
 
     return { success: true };
   }

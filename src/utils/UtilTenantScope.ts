@@ -1,5 +1,5 @@
 import { ExtractTablesWithRelations, sql } from "drizzle-orm";
-import { ITenantApp, IUserApp } from "../interfaces/IContextApp";
+import { ITenantApp, ITenantUserApp } from "../interfaces/IContextApp";
 import {
   NodePgDatabase,
   NodePgQueryResultHKT,
@@ -17,13 +17,13 @@ export type TTransaction =
 
 export class UtilTenantScope {
   static async tenantScope<T>(
-    c: ITenantApp | IUserApp,
+    c: ITenantApp | ITenantUserApp,
     callback: (tx: TTransaction) => Promise<T>,
   ): Promise<T> {
     return await c.db.transaction(async (tx) => {
       const currentTenant = c.tenantId || "";
       const isSystem =
-        "session" in c && (c as IUserApp).session.isSuperUser === true;
+        "session" in c && (c as ITenantUserApp).session.isSuperUser === true;
       const bypassRls = isSystem ? "on" : "off";
       await tx.execute(
         sql`SELECT set_config('app.current_tenant', ${currentTenant}, true), set_config('app.bypass_rls', ${bypassRls}, true)`,

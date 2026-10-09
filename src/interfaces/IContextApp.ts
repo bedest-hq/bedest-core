@@ -6,10 +6,13 @@ export interface IApp {
   nowDatetime: Date;
 }
 
+export interface IUserApp extends IApp {
+  session: ISession;
+}
+
 export interface ITenantApp extends IApp {
   tenantId: string;
 }
 
-export interface IUserApp extends ITenantApp {
-  session: ISession;
-}
+export interface ITenantUserApp extends IUserApp, ITenantApp {}
+

@@ -12,7 +12,7 @@ export abstract class ServiceBaseTenant<
   TInsertData = Prettify<
     Omit<
       InferInsertModel<TTable>,
-      "id" | "tenantId" | "createdAt" | "isDeleted" | "deletedAt"
+      "id" | "tenantId" | "createdAt" | "updatedAt" | "isDeleted" | "deletedAt"
     >
   >,
 > extends ServiceBase<TTable, TId, ITenantApp, TInsertData> {

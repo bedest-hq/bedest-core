@@ -1,6 +1,11 @@
 // Interfaces
 export type { ISession } from "./interfaces/ISession";
-export type { IApp, ITenantApp, IUserApp } from "./interfaces/IContextApp";
+export type {
+  IApp,
+  ITenantApp,
+  IUserApp,
+  ITenantUserApp,
+} from "./interfaces/IContextApp";
 export type { IBaseTable } from "./interfaces/IBaseTable";
 
 // Types
