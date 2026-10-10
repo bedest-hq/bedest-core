@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/bedest-hq/bedest-core/compare/v1.0.2...v1.1.0) (2026-10-10)
+
+
+### Features
+
+* decouple IUserApp from ITenantApp, add updatedAt to baseColumns, and harden service methods ([de6b145](https://github.com/bedest-hq/bedest-core/commit/de6b145ce1c9dcbaa907a316cdad7043bdd5c6bf))
+
 ## [1.1.0](https://github.com/bedest-hq/bedest-core/compare/v1.0.2...v1.1.0) (2026-10-09)
 
 
