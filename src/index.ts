@@ -26,7 +26,7 @@ export type { IScrubOptions } from "./utils/UtilAudit";
 // Guards
 export { MacroRoleGuard } from "./guards/GuardRole";
 export { MacroPlanGuard } from "./guards/GuardPlan";
-export type { PlanChecker } from "./guards/GuardPlan";
+export type { PlanChecker, IPlanGuardOptions } from "./guards/GuardPlan";
 
 // Schemas
 export { baseColumns } from "./schemas/SBase";
