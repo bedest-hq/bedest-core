@@ -38,7 +38,8 @@ export abstract class ServiceBase<
   protected getFilters(id?: TId): SQL[] {
     const filters: SQL[] = [eq(this.table.isDeleted, false)];
 
-    if (id) {
+    // `0` is a valid id: only "no id" skips the filter [CORE-09].
+    if (id !== undefined) {
       filters.push(eq(this.table.id, id));
     }
 
