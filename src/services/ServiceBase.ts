@@ -135,9 +135,23 @@ export abstract class ServiceBase<
       >
     >,
   ): Promise<{ success: boolean }> {
+    // Undefined fields are "not provided"; nothing left → 400, never a
+    // driver error ("No values to set" → 500) [BUG-02].
+    const values = Object.fromEntries(
+      Object.entries(data as Record<string, unknown>).filter(
+        ([, value]) => value !== undefined,
+      ),
+    );
+    if (Object.keys(values).length === 0) {
+      throw status(400, {
+        error: "Bad Request",
+        message: "No fields to update",
+      });
+    }
+
     const update = await c.db
       .update(this.table)
-      .set(data as PgUpdateSetSource<TTable>)
+      .set(values as PgUpdateSetSource<TTable>)
       .where(and(...this.getFilters(id)));
 
     const count =
