@@ -2,7 +2,8 @@ import { t } from "elysia";
 
 export const VId = t.String({ format: "uuid" });
 
-export const VEmail = t.String({ format: "email" });
+// RFC 5321 limits an address to 254 characters [SEC-21][CORE-12].
+export const VEmail = t.String({ format: "email", maxLength: 254 });
 
 export const VNumber = t.Number({ minimum: 0 });
 
