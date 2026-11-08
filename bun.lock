@@ -5,6 +5,7 @@
       "name": "bedest-core",
       "devDependencies": {
         "@electric-sql/pglite": "^0.5.4",
+        "@sinclair/typebox": "^0.34.49",
         "@types/bun": "^1.3.14",
         "drizzle-orm": "^0.45.2",
         "elysia": "^1.4.29",

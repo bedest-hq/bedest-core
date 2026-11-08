@@ -36,4 +36,11 @@ export type { PlanChecker, IPlanGuardOptions } from "./guards/GuardPlan";
 export { baseColumns } from "./schemas/SBase";
 
 // Validations
-export { VId, VEmail, VNumber, VString, VQuery } from "./validations/VCommon";
+export {
+  VId,
+  VEmail,
+  VNumber,
+  VStr,
+  VString,
+  VQuery,
+} from "./validations/VCommon";
