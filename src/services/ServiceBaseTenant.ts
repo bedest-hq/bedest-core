@@ -4,7 +4,7 @@ import { ITenantApp } from "../interfaces/IContextApp";
 import { UtilTenantScope } from "../utils/UtilTenantScope";
 import { type InferInsertModel } from "drizzle-orm";
 import { type SelectedFields, type PgColumn } from "drizzle-orm/pg-core";
-import { Prettify } from "elysia/types";
+import type { Prettify } from "../types/TPrettify";
 
 export abstract class ServiceBaseTenant<
   TTable extends IBaseTable & { tenantId: PgColumn },

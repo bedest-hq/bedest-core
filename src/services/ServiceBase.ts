@@ -14,7 +14,7 @@ import {
   type PgUpdateSetSource,
 } from "drizzle-orm/pg-core";
 import { type IBaseTable } from "../interfaces/IBaseTable";
-import { Prettify } from "elysia/types";
+import type { Prettify } from "../types/TPrettify";
 import { IApp } from "../interfaces/IContextApp";
 import { status } from "elysia";
 
