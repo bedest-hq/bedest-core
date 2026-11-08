@@ -43,7 +43,11 @@ export abstract class ServiceBase<
     return getTableColumns(this.table);
   }
 
-  protected getFilters(id?: TId): SQL[] {
+  /**
+   * WHERE predicates of every query. Receives the context so subclasses can
+   * scope by it (ServiceBaseTenant adds the tenant) [CORE-02].
+   */
+  protected getFilters(c: TContext, id?: TId): SQL[] {
     const filters: SQL[] = [eq(this.table.isDeleted, false)];
 
     // `0` is a valid id: only "no id" skips the filter [CORE-09].
@@ -85,7 +89,7 @@ export abstract class ServiceBase<
     meta: { total: number; page: number; limit: number; totalPages: number };
   }> {
     const offset = (query.page - 1) * query.limit;
-    const filters = this.getFilters();
+    const filters = this.getFilters(c);
 
     return await c.db.transaction(async (tx) => {
       const [totalRes] = await tx
@@ -124,7 +128,7 @@ export abstract class ServiceBase<
     const rows: SelectResultFields<TSelection>[] = await c.db
       .select(columns)
       .from(this.selectable)
-      .where(and(...this.getFilters(id)));
+      .where(and(...this.getFilters(c, id)));
 
     const [res] = rows;
     if (!res) {
@@ -162,7 +166,7 @@ export abstract class ServiceBase<
     const update = await c.db
       .update(this.table)
       .set(values as PgUpdateSetSource<TTable>)
-      .where(and(...this.getFilters(id)));
+      .where(and(...this.getFilters(c, id)));
 
     const count =
       update.rowCount ?? (update as { affectedRows?: number }).affectedRows;
@@ -182,7 +186,7 @@ export abstract class ServiceBase<
     const update = await c.db
       .update(this.table)
       .set(payload)
-      .where(and(...this.getFilters(id)));
+      .where(and(...this.getFilters(c, id)));
 
     const count =
       update.rowCount ?? (update as { affectedRows?: number }).affectedRows;

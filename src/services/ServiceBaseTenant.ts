@@ -2,7 +2,7 @@ import { ServiceBase } from "./ServiceBase";
 import { IBaseTable } from "../interfaces/IBaseTable";
 import { ITenantApp } from "../interfaces/IContextApp";
 import { UtilTenantScope } from "../utils/UtilTenantScope";
-import { type InferInsertModel } from "drizzle-orm";
+import { eq, type InferInsertModel, type SQL } from "drizzle-orm";
 import { type SelectedFields, type PgColumn } from "drizzle-orm/pg-core";
 import type { Prettify } from "../types/TPrettify";
 
@@ -16,6 +16,18 @@ export abstract class ServiceBaseTenant<
     >
   >,
 > extends ServiceBase<TTable, TId, ITenantApp, TInsertData> {
+  /**
+   * Defense in depth [CORE-02]: besides RLS, every query of a non-super
+   * user is filtered by its own tenant id.
+   */
+  protected override getFilters(c: ITenantApp, id?: TId): SQL[] {
+    const filters = super.getFilters(c, id);
+    if (!isSuperUser(c)) {
+      filters.push(eq(this.table.tenantId, c.tenantId));
+    }
+    return filters;
+  }
+
   async create(c: ITenantApp, data: TInsertData) {
     return await UtilTenantScope.tenantScope(c, async (tx) => {
       const payload = {
@@ -67,3 +79,10 @@ export abstract class ServiceBaseTenant<
     );
   }
 }
+
+const isSuperUser = (c: ITenantApp): boolean =>
+  "session" in c &&
+  typeof c.session === "object" &&
+  c.session !== null &&
+  "isSuperUser" in c.session &&
+  c.session.isSuperUser === true;
