@@ -21,6 +21,7 @@ export { UtilTenantScope } from "./utils/UtilTenantScope";
 export { UtilDbSchema } from "./utils/UtilDbSchema";
 export { UtilRouter } from "./utils/UtilRouter";
 export { UtilAudit } from "./utils/UtilAudit";
+export type { IScrubOptions } from "./utils/UtilAudit";
 
 // Guards
 export { MacroRoleGuard } from "./guards/GuardRole";
