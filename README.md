@@ -156,3 +156,11 @@ export const SMyTable = pgTable(
   }
 }
 ```
+
+---
+
+## Publishing
+
+Releases are cut by [release-please](https://github.com/googleapis/release-please-action). When a release is created, the workflow first runs the full CI (`typecheck`, `test`, `build`, `npm pack --dry-run`) and only then publishes with `npm publish --provenance --access public` (`id-token: write`).
+
+The publish step still authenticates with the `NPM_TOKEN` secret. To remove the long-lived token, configure [npm trusted publishing](https://docs.npmjs.com/trusted-publishers) for `bedest-core` (GitHub Actions, workflow `release-please.yml`), then delete the `NODE_AUTH_TOKEN` line and the `NPM_TOKEN` secret. Until then, use a granular, publish-only automation token and rotate it.
