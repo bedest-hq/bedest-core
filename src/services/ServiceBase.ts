@@ -18,6 +18,24 @@ import type { Prettify } from "../types/TPrettify";
 import { IApp } from "../interfaces/IContextApp";
 import { status } from "elysia";
 
+/**
+ * Rows changed by an UPDATE. `TDb` is generic over the driver's result type
+ * (node-postgres `rowCount`, PGlite `affectedRows`), so it is read
+ * structurally [CORE-10].
+ */
+const affectedRows = (result: unknown): number | undefined => {
+  if (typeof result !== "object" || result === null) {
+    return undefined;
+  }
+  if ("rowCount" in result && typeof result.rowCount === "number") {
+    return result.rowCount;
+  }
+  if ("affectedRows" in result && typeof result.affectedRows === "number") {
+    return result.affectedRows;
+  }
+  return undefined;
+};
+
 export abstract class ServiceBase<
   TTable extends IBaseTable,
   TId extends string | number = string,
@@ -168,8 +186,7 @@ export abstract class ServiceBase<
       .set(values as PgUpdateSetSource<TTable>)
       .where(and(...this.getFilters(c, id)));
 
-    const count =
-      update.rowCount ?? (update as { affectedRows?: number }).affectedRows;
+    const count = affectedRows(update);
     if (count === 0) {
       throw status("Not Found");
     }
@@ -188,8 +205,7 @@ export abstract class ServiceBase<
       .set(payload)
       .where(and(...this.getFilters(c, id)));
 
-    const count =
-      update.rowCount ?? (update as { affectedRows?: number }).affectedRows;
+    const count = affectedRows(update);
     if (count === 0) {
       throw status("Not Found");
     }

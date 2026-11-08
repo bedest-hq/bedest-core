@@ -10,7 +10,11 @@ export type { IBaseTable } from "./interfaces/IBaseTable";
 
 // Types
 export type { TDb } from "./types/TDb";
-export type { TTransaction } from "./utils/UtilTenantScope";
+export type {
+  TDbOrTx,
+  TTransaction,
+  TTx,
+} from "./utils/UtilTenantScope";
 
 // Services
 export { ServiceBase } from "./services/ServiceBase";

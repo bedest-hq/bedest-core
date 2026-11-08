@@ -7,7 +7,7 @@ import type { TDb } from "../types/TDb";
  *
  * Unavoidable cast: drizzle-orm 0.45 types `PgliteDatabase` and
  * `NodePgDatabase` (TDb) as unrelated classes (different query-result HKT
- * and `$client`) although they share the PgDatabase runtime (see CORE-10).
+ * and `$client`) although they share the PgDatabase runtime; TDb stays NodePgDatabase, see src/types/TDb.ts (CORE-10).
  */
 const asTDb = (db: PgliteDatabase): TDb => db as unknown as TDb;
 
