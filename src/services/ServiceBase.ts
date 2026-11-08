@@ -4,15 +4,15 @@ import {
   getTableColumns,
   type SQL,
   type InferInsertModel,
-  type InferSelectModel,
   count,
   desc,
 } from "drizzle-orm";
 import {
-  PgTable,
+  type PgTable,
   type SelectedFields,
   type PgUpdateSetSource,
 } from "drizzle-orm/pg-core";
+import type { SelectResultFields } from "drizzle-orm/query-builders/select.types";
 import { type IBaseTable } from "../interfaces/IBaseTable";
 import type { Prettify } from "../types/TPrettify";
 import { IApp } from "../interfaces/IContextApp";
@@ -30,6 +30,14 @@ export abstract class ServiceBase<
   >,
 > {
   constructor(protected table: TTable) {}
+
+  /**
+   * The table widened to PgTable: drizzle's from() overload cannot check a
+   * generic table type, the widening needs no cast [CORE-01].
+   */
+  private get selectable(): PgTable {
+    return this.table;
+  }
 
   protected get columns() {
     return getTableColumns(this.table);
@@ -73,7 +81,7 @@ export abstract class ServiceBase<
     query: { limit: number; page: number },
     columns: TSelection,
   ): Promise<{
-    data: Prettify<InferSelectModel<TTable>>[];
+    data: SelectResultFields<TSelection>[];
     meta: { total: number; page: number; limit: number; totalPages: number };
   }> {
     const offset = (query.page - 1) * query.limit;
@@ -82,19 +90,19 @@ export abstract class ServiceBase<
     return await c.db.transaction(async (tx) => {
       const [totalRes] = await tx
         .select({ count: count() })
-        .from(this.table as unknown as PgTable)
+        .from(this.selectable)
         .where(and(...filters));
 
       const total = Number(totalRes.count);
 
-      const data = (await tx
+      const data: SelectResultFields<TSelection>[] = await tx
         .select(columns)
-        .from(this.table as unknown as PgTable)
+        .from(this.selectable)
         .where(and(...filters))
         .$dynamic()
         .limit(query.limit)
         .offset(offset)
-        .orderBy(...this.getOrderBy())) as Prettify<InferSelectModel<TTable>>[];
+        .orderBy(...this.getOrderBy());
 
       return {
         data,
@@ -112,16 +120,17 @@ export abstract class ServiceBase<
     c: TContext,
     id: TId,
     columns: TSelection,
-  ): Promise<Prettify<InferSelectModel<TTable>>> {
-    const [res] = await c.db
+  ): Promise<SelectResultFields<TSelection>> {
+    const rows: SelectResultFields<TSelection>[] = await c.db
       .select(columns)
-      .from(this.table as unknown as PgTable)
+      .from(this.selectable)
       .where(and(...this.getFilters(id)));
 
+    const [res] = rows;
     if (!res) {
       throw status("Not Found");
     }
-    return res as Prettify<InferSelectModel<TTable>>;
+    return res;
   }
 
   async update(
