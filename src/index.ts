@@ -10,11 +10,13 @@ export type { IBaseTable } from "./interfaces/IBaseTable";
 
 // Types
 export type { TDb } from "./types/TDb";
-export type {
-  TDbOrTx,
-  TTransaction,
-  TTx,
-} from "./utils/UtilTenantScope";
+import type { TDbOrTx } from "./utils/UtilTenantScope";
+export type { TDbOrTx, TTx } from "./utils/UtilTenantScope";
+/**
+ * Old name of `TDbOrTx`: it never meant "a transaction" only [CORE-10].
+ * @deprecated Use `TDbOrTx`; removed in the next major.
+ */
+export type TTransaction = TDbOrTx;
 
 // Services
 export { ServiceBase } from "./services/ServiceBase";

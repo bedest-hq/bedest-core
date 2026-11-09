@@ -14,12 +14,6 @@ export type TTx = PgTransaction<
 /** Either a database handle or an open transaction [CORE-10]. */
 export type TDbOrTx = TDb | TTx;
 
-/**
- * Old name of `TDbOrTx`: it never meant "a transaction" only [CORE-10].
- * @deprecated Use `TDbOrTx`; removed in the next major.
- */
-export type TTransaction = TDbOrTx;
-
 export class UtilTenantScope {
   static async tenantScope<T>(
     c: ITenantApp | ITenantUserApp,

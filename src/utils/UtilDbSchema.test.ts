@@ -47,3 +47,12 @@ describe("UtilDbSchema", () => {
     expect(using).toContain('"tenantId"');
   });
 });
+
+describe("UtilDbSchema without baseColumns", () => {
+  it("a partial index on a table without isDeleted fails at definition time", () => {
+    const SPlain = pgTable("plain", { id: uuid().primaryKey(), name: varchar({ length: 10 }) }, (t) => [
+      UtilDbSchema.activeIndex("idx_plain", t.name),
+    ]);
+    expect(() => getTableConfig(SPlain)).toThrow(/has no isDeleted column/);
+  });
+});

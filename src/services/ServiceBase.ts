@@ -186,8 +186,8 @@ export abstract class ServiceBase<
       .set(values as PgUpdateSetSource<TTable>)
       .where(and(...this.getFilters(c, id)));
 
-    const count = affectedRows(update);
-    if (count === 0) {
+    const changed = affectedRows(update);
+    if (changed === 0) {
       throw status("Not Found");
     }
 
@@ -205,8 +205,8 @@ export abstract class ServiceBase<
       .set(payload)
       .where(and(...this.getFilters(c, id)));
 
-    const count = affectedRows(update);
-    if (count === 0) {
+    const changed = affectedRows(update);
+    if (changed === 0) {
       throw status("Not Found");
     }
 

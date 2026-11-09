@@ -1,8 +1,8 @@
 /**
  * Type-level tests (checked by `bun run typecheck`, excluded from the build)
  * [CORE-10]: `TDbOrTx` is the handle-or-transaction union and scope
- * callbacks receive a transaction. (`TTransaction` is a plain alias of
- * `TDbOrTx`; it is @deprecated, so it is not referenced here.)
+ * callbacks receive a transaction. (The deprecated `TTransaction` alias is
+ * declared in index.ts and not referenced here.)
  */
 import type { TDb } from "../types/TDb";
 import { UtilTenantScope, type TDbOrTx, type TTx } from "./UtilTenantScope";
@@ -22,5 +22,5 @@ export type Checks = [
 
 // Helpers typed with the wide union (handle or transaction) fit a callback.
 declare const db: TDb;
-const helper = async (tx: TDbOrTx) => tx;
+const helper = (tx: TDbOrTx) => Promise.resolve(tx);
 export const usesHelper = () => UtilTenantScope.systemScope(db, helper);
