@@ -1,5 +1,22 @@
 # Changelog
 
+## Unreleased
+
+### ⚠ Breaking changes (2.0.0)
+
+* `ServiceBase.getFilters(id?)` → `getFilters(c, id?)`; `ServiceBaseTenant` always filters by `c.tenantId` for non-super users [CORE-02].
+* `MacroPlanGuard`: insufficient plan → `403 { message: "PLAN_UPGRADE_REQUIRED" }` instead of `426` (402 for expired plans unchanged) [CORE-07].
+* `update()` with no defined fields → `400` [BUG-02]; `getAll`/`getById` results typed from the selected columns [CORE-01].
+* Partial-index predicates are table-qualified (regenerate migrations once) [CORE-03]; `IBaseTable` requires `updatedAt` [CORE-08].
+* ESM only, `engines.bun >= 1.2.20`, peers `elysia ^1.3.0` and `drizzle-orm >=0.41.0 <0.46.0` [CORE-04][CORE-05].
+* `UtilAudit.scrub()` redacts by normalized key fragments (more keys) [SEC-06].
+
+### Features and fixes
+
+* `TDbOrTx` / `TTx` types; `TTransaction` deprecated [CORE-10]; `VStr(max)` bounded strings.
+* `exports` map with a `default` condition (drizzle-kit can load the package) [NEW-05]; `sideEffects: false`, license and repository metadata.
+* Publish pipeline runs the full CI before `npm publish --provenance` [OPS-07]; coverage gate ≥ 90 % lines [CORE-11].
+
 ## [1.1.0](https://github.com/bedest-hq/bedest-core/compare/v1.0.2...v1.1.0) (2026-10-09)
 
 

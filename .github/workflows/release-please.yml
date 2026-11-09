@@ -6,45 +6,59 @@ on:
       - main
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
 
 jobs:
   release-please:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    outputs:
+      releases_created: ${{ steps.release.outputs.releases_created }}
     steps:
-      - uses: google-github-actions/release-please-action@v4
+      - uses: googleapis/release-please-action@v5
         id: release
         with:
           release-type: node
 
+  verify:
+    needs: release-please
+    if: ${{ needs.release-please.outputs.releases_created == 'true' }}
+    uses: ./.github/workflows/ci.yml
+
+  publish:
+    needs: [release-please, verify]
+    if: ${{ needs.release-please.outputs.releases_created == 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # Required for npm provenance (and for npm trusted publishing).
+      id-token: write
+    steps:
       - name: Checkout Code
-        if: ${{ steps.release.outputs.releases_created }}
         uses: actions/checkout@v4
 
       - name: Setup Bun
-        if: ${{ steps.release.outputs.releases_created }}
-        uses: oven-sh/setup-bun@v1
+        uses: oven-sh/setup-bun@v2
         with:
-          bun-version: latest
+          bun-version: 1.2.20
 
       - name: Setup Node.js
-        if: ${{ steps.release.outputs.releases_created }}
         uses: actions/setup-node@v4
         with:
           node-version: '20.x'
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install Dependencies
-        if: ${{ steps.release.outputs.releases_created }}
-        run: bun install
+        run: bun install --frozen-lockfile
 
       - name: Build Project
-        if: ${{ steps.release.outputs.releases_created }}
         run: bun run build
 
       - name: Publish to NPM
-        if: ${{ steps.release.outputs.releases_created }}
-        run: npm publish --access public
+        # NPM_TOKEN is only needed until npm trusted publishing is
+        # configured for this package (see README "Publishing").
+        run: npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

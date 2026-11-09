@@ -1,0 +1,9 @@
+[test]
+# CORE-11: `bun run coverage` fails when a src/ file is below 90 % lines.
+# Bun applies the threshold per file and an omitted `functions` defaults to
+# the same bar; its function count includes class bodies, so a fully
+# covered one-method class (UtilRouter) reads 50 %. Functions are held at
+# 50 % for that reason; lines are the acceptance metric.
+coverageSkipTestFiles = true
+coveragePathIgnorePatterns = ["src/test-support/**"]
+coverageThreshold = { lines = 0.9, functions = 0.5 }
