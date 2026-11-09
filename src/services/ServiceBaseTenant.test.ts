@@ -68,3 +68,14 @@ describe("ServiceBaseTenant tenant filter", () => {
     expect((await service.getById(superUser(), noteB, { title: SNote.title })).title).toBe("b");
   });
 });
+
+describe("ServiceBaseTenant.create", () => {
+  it("the tenant comes from the context even if the payload smuggles one", async () => {
+    // Not an object literal, so the extra key passes the type check like
+    // an unvalidated request body would.
+    const smuggled = { title: "smuggled", tenantId: B };
+    const { id } = await service.create(tenantA(), smuggled);
+    const row = await service.getById(superUser(), id, { tenantId: SNote.tenantId });
+    expect(row.tenantId).toBe(A);
+  });
+});

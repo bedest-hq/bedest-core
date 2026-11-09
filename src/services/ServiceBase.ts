@@ -81,8 +81,17 @@ export abstract class ServiceBase<
   }
 
   async create(c: TContext, data: TInsertData): Promise<{ id: TId }> {
+    return await this.insertRow(c, data as object);
+  }
+
+  /**
+   * Inserts `values` plus the bookkeeping columns. Subclasses add their
+   * scope columns here (ServiceBaseTenant: tenantId) without re-typing the
+   * insert payload.
+   */
+  protected async insertRow(c: TContext, values: object): Promise<{ id: TId }> {
     const payload = {
-      ...(data as object),
+      ...values,
       createdAt: c.nowDatetime,
       isDeleted: false,
     } as InferInsertModel<TTable>;
@@ -97,6 +106,7 @@ export abstract class ServiceBase<
     }
     return res as { id: TId };
   }
+
 
   async getAll<TSelection extends SelectedFields>(
     c: TContext,

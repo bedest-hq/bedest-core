@@ -29,16 +29,13 @@ export abstract class ServiceBaseTenant<
   }
 
   async create(c: ITenantApp, data: TInsertData) {
-    return await UtilTenantScope.tenantScope(c, async (tx) => {
-      const payload = {
+    // The tenant always comes from the context, never from the payload.
+    return await UtilTenantScope.tenantScope(c, async (tx) =>
+      this.insertRow({ ...c, db: tx }, {
         ...(data as object),
         tenantId: c.tenantId,
-      } as unknown as Parameters<
-        ServiceBase<TTable, TId, ITenantApp, TInsertData>["create"]
-      >[1];
-
-      return await super.create({ ...c, db: tx }, payload);
-    });
+      }),
+    );
   }
 
   async update(
