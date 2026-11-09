@@ -11,7 +11,7 @@ The package has no runtime dependencies of its own; `elysia` and `drizzle-orm` a
 
 | Package       | Supported range     | Notes                                                    |
 | ------------- | ------------------- | -------------------------------------------------------- |
-| Bun           | `>= 1.3`            | `engines.bun`; the package ships ESM only.               |
+| Bun           | `>= 1.2.20`         | `engines.bun` (the tested version); ships ESM only.      |
 | `elysia`      | `^1.3.0`            | 1.2 and older lack the `status()` helper the guards use. |
 | `drizzle-orm` | `>=0.41.0 <0.46.0`  | Verified against 0.41.0 to 0.45.x.                       |
 
@@ -187,7 +187,7 @@ Every request field written to a `varchar(n)` column **must** use `VStr(n)`, so 
 - The partial-index `WHERE` clause is generated from the column (table-qualified); run `drizzle-kit generate` once, it produces a migration that recreates those indexes.
 - `IBaseTable` now requires `updatedAt` (part of `baseColumns` since 1.1).
 - `UtilAudit.scrub()` redacts more keys (normalized matching of `password`, `token`, `secret`, `cookie`, `session`, …).
-- The package is ESM only (the `require` condition pointed at an ESM file and is gone), requires Bun `>= 1.3`, and the peer ranges are bounded (see [Requirements](#requirements)).
+- The package is ESM only (the `require` condition pointed at an ESM file and is gone), requires Bun `>= 1.2.20`, and the peer ranges are bounded (see [Requirements](#requirements)).
 - `TTransaction` is deprecated in favour of `TDbOrTx`.
 
 ---
